@@ -83,7 +83,6 @@ public class CategoryBrandRelationController {
     //@RequiresPermissions("product:categorybrandrelation:delete")
     public R delete(@RequestBody Long[] ids){
 		categoryBrandRelationService.removeByIds(Arrays.asList(ids));
-
         return R.ok();
     }
 
