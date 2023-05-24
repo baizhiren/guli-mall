@@ -1,15 +1,17 @@
 package com.gulimall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.gulimall.product.vo.BrandResp;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.gulimall.product.service.CategoryBrandRelationService;
@@ -27,6 +29,7 @@ import com.common.utils.R;
  */
 @RestController
 @RequestMapping("product/categorybrandrelation")
+@Slf4j
 public class CategoryBrandRelationController {
     @Autowired
     private CategoryBrandRelationService categoryBrandRelationService;
@@ -42,6 +45,26 @@ public class CategoryBrandRelationController {
         return R.ok().put("page", page);
     }
 
+    @GetMapping("/catelog/list")
+    //@RequiresPermissions("product:categorybrandrelation:list")
+    public R list(@RequestParam("brandId") Long brandId){
+        List<CategoryBrandRelationEntity> list = categoryBrandRelationService.list(
+                new QueryWrapper<CategoryBrandRelationEntity>().eq("brand_id", brandId));
+        return R.ok().put("data", list);
+    }
+
+    @GetMapping("/brands/list")
+    public R getCategoryBrand(@RequestParam(value = "catId") Long catId){
+        List<CategoryBrandRelationEntity> list = categoryBrandRelationService.getCategoryBrand(catId);
+        log.debug(list.toString());
+        List<BrandResp> collect = list.stream().map(item -> {
+            BrandResp brandResp = new BrandResp();
+            BeanUtils.copyProperties(item,  brandResp);
+            return brandResp;
+        }).collect(Collectors.toList());
+
+        return R.ok().put("data", collect);
+    }
 
     /**
      * 信息
@@ -60,7 +83,7 @@ public class CategoryBrandRelationController {
     @RequestMapping("/save")
     //@RequiresPermissions("product:categorybrandrelation:save")
     public R save(@RequestBody CategoryBrandRelationEntity categoryBrandRelation){
-		categoryBrandRelationService.save(categoryBrandRelation);
+		categoryBrandRelationService.saveDetail(categoryBrandRelation);
 
         return R.ok();
     }

@@ -1,10 +1,15 @@
 package com.gulimall.product.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.gulimall.product.service.CategoryBrandRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +21,7 @@ import com.gulimall.product.service.BrandService;
 import com.common.utils.PageUtils;
 import com.common.utils.R;
 
+import javax.validation.Valid;
 
 
 /**
@@ -30,6 +36,9 @@ import com.common.utils.R;
 public class BrandController {
     @Autowired
     private BrandService brandService;
+
+    @Autowired
+    private CategoryBrandRelationService categoryBrandRelationService;
 
     /**
      * 列表
@@ -59,9 +68,16 @@ public class BrandController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:brand:save")
-    public R save(@RequestBody BrandEntity brand){
+    public R save(@Valid @RequestBody BrandEntity brand/*, BindingResult result*/){
+//        if(result.hasErrors()){
+////            List<FieldError> fieldErrors = result.getFieldErrors();
+////            Map<String, String> map = new HashMap<>();
+////            fieldErrors.forEach(item -> {
+////                map.put(item.getField(), item.getDefaultMessage());
+////            });
+////            return R.ok().put("data", map);
+////        }
 		brandService.save(brand);
-
         return R.ok();
     }
 
@@ -72,6 +88,9 @@ public class BrandController {
     //@RequiresPermissions("product:brand:update")
     public R update(@RequestBody BrandEntity brand){
 		brandService.updateById(brand);
+		categoryBrandRelationService.updateBrand(brand);
+
+		//TODO 更新其他关联关系
 
         return R.ok();
     }

@@ -8,6 +8,7 @@
 
 package com.common.utils;
 
+import com.common.exception.CodeEnum;
 import org.apache.http.HttpStatus;
 
 import java.util.HashMap;
@@ -40,6 +41,13 @@ public class R extends HashMap<String, Object> {
 		r.put("msg", msg);
 		return r;
 	}
+	public static R error(CodeEnum codeEnum){
+		R r = new R();
+		r.put("code", codeEnum.getCode());
+		r.put("msg", codeEnum.getMessage());
+		return r;
+	}
+
 
 	public static R ok(String msg) {
 		R r = new R();
@@ -60,5 +68,10 @@ public class R extends HashMap<String, Object> {
 	public R put(String key, Object value) {
 		super.put(key, value);
 		return this;
+	}
+
+
+	public int getCode(){
+		return (Integer)this.get("code");
 	}
 }

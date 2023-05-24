@@ -10,6 +10,13 @@ spring:
         nacos:
             discovery:
                 server-addr: 127.0.0.1:8848
+    http:
+        encoding:
+            charset: utf-8
+
+    jackson:
+        time-zone: GMT+8
+        date-format: yyyy-MM-dd HH:mm:ss
 mybatis-plus:
     config-locations: classpath*:/mapper/**/*.xml
     global-config:
@@ -17,3 +24,12 @@ mybatis-plus:
             id-type: auto
 server:
     port: 8082
+logging:
+    level:
+        com.gulimall: debug
+alibaba:
+    cloud:
+        access-key: LTAI5tPaxTAd7Wr5Xnu5bjGh
+        secret-key: TFLSSa8aq2riM62IbQKoDFvTZZPf9y
+        oss:
+            endpoint: oss-cn-beijing.aliyuncs.com

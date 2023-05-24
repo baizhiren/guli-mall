@@ -42,9 +42,30 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                 .map(menu -> this.setChildren(menu, categories)).
                 sorted((m1, m2) -> {
                     int s1 = m1.getSort() == null ? 0 : m1.getSort();
-                    int s2 = m1.getSort() == null ? 0 : m1.getSort();
+                    int s2 = m2.getSort() == null ? 0 : m2.getSort();
                     return s1 - s2;
                 }).collect(Collectors.toList());
+    }
+
+    @Override
+    public void removeMenuByIds(List<Long> asList) {
+        //todo 依赖项的管理
+        baseMapper.deleteBatchIds(asList);
+    }
+
+    @Override
+    public Long[] getPathByCategoryId(Long catelogId) {
+        List<Long> path = new ArrayList<>();
+        findPath(catelogId, path);
+        return path.toArray(new Long[0]);
+    }
+    public void findPath(Long catelogId, List<Long> path){
+        CategoryEntity categoryEntity = baseMapper.selectById(catelogId);
+        Long parentCid = categoryEntity.getParentCid();
+        if(parentCid != 0){
+            findPath(parentCid, path);
+        }
+        path.add(catelogId);
     }
 
     public CategoryEntity setChildren(CategoryEntity parent, List<CategoryEntity> all){
@@ -52,14 +73,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                         .map(menu -> this.setChildren(menu, all)).
                         sorted((m1, m2) -> {
                             int s1 = m1.getSort() == null ? 0 : m1.getSort();
-                            int s2 = m1.getSort() == null ? 0 : m1.getSort();
+                            int s2 = m2.getSort() == null ? 0 : m2.getSort();
                             return s1 - s2;
                         }).collect(Collectors.toList()));
                 return parent;
     }
-
-
-
 
 
 }
