@@ -1,7 +1,7 @@
 alibaba:
   cloud:
-    access-key: LTAI5tPaxTAd7Wr5Xnu5bjGh
-    secret-key: TFLSSa8aq2riM62IbQKoDFvTZZPf9y
+    access-key: *
+    secret-key: *
     oss:
       endpoint: oss-cn-beijing.aliyuncs.com
       bucket: gulimall-stock
